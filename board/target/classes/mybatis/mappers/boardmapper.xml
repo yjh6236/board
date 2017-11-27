@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+<!-- 여러 곳에서 사용할 공통된 sql -->
+	<sql id="search">
+		<!-- searchType 이 null이 아니면 -->
+		<if test="searchType != null">
+			<if test="searchType == 't'.toString()">
+				where upper(title) like '%' || #{keyword} || '%'
+			</if>
+			<if test="searchType == 'c'.toString()">
+				where upper(content) like '%' || #{keyword} || '%'
+			</if> 		
+			<if test="searchType == 'w'.toString()">
+				where upper(id) like '%' || #{keyword} || '%'
+			</if>
+			<if test="searchType == 'tc'.toString()">
+				where upper(title) like '%' || #{keyword} || '%' or
+			   	 	upper(content) like '%' || #{keyword} || '%' 
+			</if>
+		</if>
+	
+	</sql>
+
+	<!-- 게시글 삽입 sql -->
+	<insert id="insert" parameterType="BoardVO">
+		insert into dogfindboard(
+		bno, title, content, id, phone )
+		values(findboardseq.nextval,
+		#{title},#{content},
+		#{id},#{phone})
+	</insert>
+
+	<!-- 게시글 전체보기 -->
+	<!-- 
+	<select id="list" resultType="BoardVO">
+		select * from dogfindboard
+	</select>
+	 -->
+	 
+	 <!-- 검색조건과 검색어를 입력받아서 데이터를 찾아오는 sql -->
+	  <select id="getList"
+	 resultType="BoardVO"
+	 parameterType="SearchCriteria">
+	 	select bno, title, content, id,
+	 		regdate, readcnt
+	 	from(select rownum rnum, bno, title, content, id,
+	 		 regdate, readcnt
+	 		 from(select * 
+	 		 	  from dogfindboard
+	 		 	  <include refid="search"></include>
+	 			  order by bno desc))
+	 	where rnum &gt;=#{pageStart} and
+	 		rnum &lt;= #{pageStart} + #{perPageNum} -1	 
+	 </select>
+	 
+	 
+	
+
+	<!-- 글번호를 가지고 하나의 데이터를 가져오는 sql -->
+	<select id="detail" resultType="BoardVO" parameterType="java.lang.Integer">
+		select *
+		from dogfindboard
+		where bno = #{bno}
+	</select>
+
+	<!-- 글번호를 가지고 조회수를 1증가시키는 sql -->
+	<update id="updateReadcnt" parameterType="java.lang.Integer">
+		update dogfindboard
+		set readcnt = readcnt + 1
+		where bno = #{bno}
+	</update>
+	
+	<!-- 글번호를 가지고 게시글을 삭제하는 sql -->
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from dogfindboard
+		where
+		bno = #{bno}
+	</delete>
+	
+	<!-- 게시글을 수정하는 sql -->
+	<update id="update" parameterType="BoardVO">
+		update dogfindboard
+		set
+		title=#{title}, content=#{content},
+		phone=#{phone},
+		regdate=sysdate
+		where bno
+		= #{bno}
+	</update>
+	
+	<!-- 
+	<select id="totalCount" resultType="java.lang.Integer">
+		select count(*)
+		from dogfindboard
+	</select>
+	 -->
+	 
+	 <!-- 검색조건과 검색어를 받아서 데이터 개수를 가져오는 sql
+	  search라는 id로 작성된 sql을 삽입 -->
+	  <select id="totalCount"
+	  resultType="java.lang.Integer"
+	  parameterType="SearchCriteria">
+	  	select count(*)
+	  	from dogfindboard
+	  	<include refid="search"></include>
+	  </select>
+	 
+	
+
+
+</mapper>

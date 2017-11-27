@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+	
+	<select id="login" resultType="UserVO" 
+	parameterType="LoginDTO">
+		select *
+		from dogfinduser
+		where id = #{id} and pw = #{pw} 
+	</select>
+	
+		<!-- 세션의 유효시간을 업데이트 해주는 sql -->
+	<update id="updateSession" parameterType="java.util.Map">
+		update dogfinduser
+		set sessionkey=#{sessionkey}, sessionlimit=#{sessionlimit}
+		where id=#{id}
+	</update>
+
+	<!-- 자동로그인 클릭 시 세션 키 값을 가지고 id와 pw 찾아오기 -->
+	<select id="checkUser" resultType="UserVO" parameterType="java.lang.String">
+		select id, name
+		from dogfinduser
+		where sessionkey=#{sessionkey}
+	</select>
+	
+	
+	
+	<!-- id 중복체크를 수행해주는 sql -->
+	<select id="idcheck" resultType="UserVO" parameterType="java.lang.String">
+		select id
+		from dogfinduser
+		where id=#{id}
+	</select>
+	
+		<!-- 회원가입을 처리해주는 sql -->
+	<insert id="insert" parameterType="UserVO">
+		insert into dogfinduser(id, pw, 
+		name, phone)
+		values(#{id},#{pw},#{name},#{phone})
+	</insert>
+	
+</mapper>

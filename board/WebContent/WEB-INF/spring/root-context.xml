@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	 <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+		id="dataSource"> <property value="oracle.jdbc.driver.OracleDriver" name="driverClassName" 
+		/> <property value="jdbc:oracle:thin:@211.183.2.253:1521:orcl" name="url" 
+		/> <property value="user12" name="username" /> <property value="user12" name="password" 
+		/> </bean> 
+		
+	<!--
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@211.183.2.253:1521:orcl" />
+		<property name="username" value="user12" />
+		<property name="password" value="user12" />
+	</bean>
+	-->
+
+	<bean id="dataSourceLog4j" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSource" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL         :  " />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- SqlSessionFactory Bean -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+		<property name="dataSource" ref="dataSource" />
+		<property value="classpath:/mybatis/mybatis-config.xml" name="configLocation" />
+		<property value="classpath:/mybatis/mappers/*.xml" name="mapperLocations" />
+	</bean>
+
+	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession"
+		destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
+	<context:component-scan base-package="com.cspi.project" />
+
+
+</beans>

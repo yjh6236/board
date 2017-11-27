@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-4.0.xsd">
+
+	<annotation-driven />
+
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+
+	<!-- 없는 경로는 톰켓이 알아서 처리하도록 설정 -->
+	<default-servlet-handler />
+
+	<context:component-scan base-package="com.cspi.project" />
+
+	<beans:bean id="loginInterceptor"
+		class="com.cspi.project.interceptor.LoginInterceptor" />
+
+	<beans:bean id="authInterceotor" 
+		class="com.cspi.project.interceptor.AuthInterceptor" />
+	
+	<beans:bean id="autoLoginInterceptor"
+		class="com.cspi.project.interceptor.AutoLoginInterceptor" />
+
+	<interceptors>
+		<interceptor>
+			<mapping path="/user/loginpost" />
+			<beans:ref bean="loginInterceptor" />
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/board/register" />
+			<mapping path="/board/update/{bno}" />
+			<mapping path="/board/delete/{bno}" />
+			
+			<beans:ref bean="authInterceotor" />
+		</interceptor>
+		
+		<!-- 프로젝트 시작 요청이 왔을 때 autoLoginInterceptor가 동작 -->
+		<interceptor>
+			<mapping path="/" />
+			<beans:ref bean="autoLoginInterceptor" />
+		</interceptor>
+	</interceptors>
+
+	<!-- 다국어 설정 -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+	<beans:bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<beans:property name="basename" value="classpath:messages" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+	</beans:bean>
+
+	<beans:bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<beans:property name="defaultLocale" value="ko" />
+		<beans:property name="cookieName" value="myAppLocaleCookie"></beans:property>
+		<beans:property name="cookieMaxAge" value="3600"></beans:property>
+	</beans:bean>
+
+
+	<interceptors>
+		<beans:bean
+			class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<beans:property name="paramName" value="locale" />
+		</beans:bean>
+	</interceptors>
+	
+</beans:beans>

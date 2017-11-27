@@ -1,0 +1,14 @@
+create table dogfinduser(
+id varchar2(50)primary key,
+pw varchar2(50)not null,
+name varchar2(100)not null);
+
+insert into dogfinduser(id, pw, name) values('user00', 'user00', 'iron man');
+insert into dogfinduser(id, pw, name) values('user01', 'user01', 'captain america');
+insert into dogfinduser(id, pw, name) values('user02', 'user02', 'hulk');
+insert into dogfinduser(id, pw, name) values('user03', 'user03', 'thor');
+insert into dogfinduser(id, pw, name) values('user04', 'user04', 'quicksilver');
+
+commit;
+
+  
