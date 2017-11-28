@@ -53,7 +53,7 @@ public class BoardController {
 	 * @RequestMapping(value="/board/list", method = RequestMethod.GET) public
 	 * void list(Model model){ model.addAttribute("list", boardService.list());
 	 * }
-	 * 충돌 테스트
+	 * 로컬과 원격저장소가 다름을 보는 테스트
 	 */
 	
 	
