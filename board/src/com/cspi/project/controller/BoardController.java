@@ -53,7 +53,7 @@ public class BoardController {
 	 * @RequestMapping(value="/board/list", method = RequestMethod.GET) public
 	 * void list(Model model){ model.addAttribute("list", boardService.list());
 	 * }
-	 * conflict 테스트
+	 * 충돌 테스트
 	 */
 	
 	
