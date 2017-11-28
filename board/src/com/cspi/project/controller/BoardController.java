@@ -44,7 +44,7 @@ public class BoardController {
 	public String register(HttpServletRequest request, RedirectAttributes rttr) {
 
 		boardService.insert(request);
-		rttr.addFlashAttribute("msg", "게시글 작성에 성공하셨습니다.");
+		rttr.addFlashAttribute("msg", "寃뚯떆湲� �옉�꽦�뿉 �꽦怨듯븯�뀲�뒿�땲�떎.");
 		return "redirect:/board/list";
 
 	}
@@ -53,7 +53,10 @@ public class BoardController {
 	 * @RequestMapping(value="/board/list", method = RequestMethod.GET) public
 	 * void list(Model model){ model.addAttribute("list", boardService.list());
 	 * }
+	 * 충돌 테스트
 	 */
+	
+	
 	
 	/*
 	@RequestMapping(value = "/board/detail", method = RequestMethod.GET)
@@ -75,7 +78,7 @@ public class BoardController {
 	@RequestMapping(value = "/board/delete", method = RequestMethod.GET)
 	public String remove(@RequestParam("bno") int bno, RedirectAttributes rttr) {
 		boardService.delete(bno);
-		rttr.addFlashAttribute("msg", "게시글 삭제에 성공하셨습니다.");
+		rttr.addFlashAttribute("msg", "寃뚯떆湲� �궘�젣�뿉 �꽦怨듯븯�뀲�뒿�땲�떎.");
 		return "redirect:/board/list";
 	}
 	*/
@@ -84,8 +87,8 @@ public class BoardController {
 	public String delete(@PathVariable int bno,
 			RedirectAttributes attr){
 		boardService.delete(bno);
-		//목록 보기로 이동 - redirect
-		attr.addFlashAttribute("msg", "게시글 삭제에 성공하셨습니다.");
+		//紐⑸줉 蹂닿린濡� �씠�룞 - redirect
+		attr.addFlashAttribute("msg", "寃뚯떆湲� �궘�젣�뿉 �꽦怨듯븯�뀲�뒿�땲�떎.");
 		return "redirect:/board/list";
 	}
 
@@ -110,7 +113,7 @@ public class BoardController {
 	@RequestMapping(value = "/board/update", method = RequestMethod.POST)
 	public String updatePOST(HttpServletRequest request, RedirectAttributes rttr) {
 		boardService.update(request);
-		rttr.addFlashAttribute("msg", "게시글 수정에 성공하셨습니다.");
+		rttr.addFlashAttribute("msg", "寃뚯떆湲� �닔�젙�뿉 �꽦怨듯븯�뀲�뒿�땲�떎.");
 		return "redirect:/board/list";
 	}
 	*/
@@ -119,12 +122,12 @@ public class BoardController {
 	public String updateBoard(HttpServletRequest request,
 			RedirectAttributes attr){
 		boardService.update(request);
-		attr.addFlashAttribute("msg", "수정에 성공하셨습니다.");
+		attr.addFlashAttribute("msg", "�닔�젙�뿉 �꽦怨듯븯�뀲�뒿�땲�떎.");
 		
 		return "redirect:/board/list";
 	}
 
-	// 페이징 처리를 위한 요청 처리 메서드
+	// �럹�씠吏� 泥섎━瑜� �쐞�븳 �슂泥� 泥섎━ 硫붿꽌�뱶
 	/*
 	@RequestMapping(value = "/board/list", method = RequestMethod.GET)
 	public void list(Criteria criteria, Model model) throws Exception {
@@ -137,23 +140,23 @@ public class BoardController {
 	}
 	*/
 	
-	//페이징 처리를 위한 요청 처리 메서드
+	//�럹�씠吏� 泥섎━瑜� �쐞�븳 �슂泥� 泥섎━ 硫붿꽌�뱶
 			@RequestMapping("/board/list")
-			//현재 페이지 번호와 데이터 개수를 파라미터로 받아서 처리
+			//�쁽�옱 �럹�씠吏� 踰덊샇�� �뜲�씠�꽣 媛쒖닔瑜� �뙆�씪誘명꽣濡� 諛쏆븘�꽌 泥섎━
 			public String getList(
 					@ModelAttribute("criteria") SearchCriteria criteria, Model model){
-				//데이터 가져오기
+				//�뜲�씠�꽣 媛��졇�삤湲�
 				List<BoardVO> list = boardService.getlist(criteria);
-				//데이터를 저장
+				//�뜲�씠�꽣瑜� ���옣
 				model.addAttribute("list", list);
 				
-				//페이징 처리를 필요한 데이터 가져오기
-				//출력을 위해서 생성
+				//�럹�씠吏� 泥섎━瑜� �븘�슂�븳 �뜲�씠�꽣 媛��졇�삤湲�
+				//異쒕젰�쓣 �쐞�빐�꽌 �깮�꽦
 				PageMaker pageMaker = new PageMaker();
-				//현재 페이지 번호와 출력할 데이터 개수가 pagemaker에 저장
+				//�쁽�옱 �럹�씠吏� 踰덊샇�� 異쒕젰�븷 �뜲�씠�꽣 媛쒖닔媛� pagemaker�뿉 ���옣
 				pageMaker.setCriteria(criteria);
-				//pagemaker에 totalcount에 데이터 전체 개수를 설정하고
-				//나머지
+				//pagemaker�뿉 totalcount�뿉 �뜲�씠�꽣 �쟾泥� 媛쒖닔瑜� �꽕�젙�븯怨�
+				//�굹癒몄�
 				pageMaker.setTotalCount(boardService.totalCount(criteria));
 				model.addAttribute("pageMaker", pageMaker);
 				
