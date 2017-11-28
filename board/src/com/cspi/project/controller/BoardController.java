@@ -75,13 +75,13 @@ public class BoardController {
 	}
 	
 	/*
-	@RequestMapping(value = "/board/delete", method = RequestMethod.GET)
 	public String remove(@RequestParam("bno") int bno, RedirectAttributes rttr) {
 		boardService.delete(bno);
 		rttr.addFlashAttribute("msg", "寃뚯떆湲� �궘�젣�뿉 �꽦怨듯븯�뀲�뒿�땲�떎.");
 		return "redirect:/board/list";
 	}
 	*/
+	
 	
 	@RequestMapping("/board/delete/{bno}")
 	public String delete(@PathVariable int bno,
@@ -98,7 +98,6 @@ public class BoardController {
 	public void updateGET(int bno, Model model) throws Exception {
 		model.addAttribute("vo", boardService.updateView(bno));
 	}
-	*/
 	
 	@RequestMapping("/board/update/{bno}")
 	public String update(@PathVariable int bno,
